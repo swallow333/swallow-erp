@@ -1,15 +1,21 @@
 package com.swalllow_erp.common;
 
+import com.alibaba.fastjson2.JSON;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
  * 全局响应统一包装
  * @Author: Swallow333
  * @Date: 2026/05/22 18:58
- * @description: 自动将 Controller 返回的数据包装成 CommonResult 格式
+ * @description: 所有的Controller响应都会经过这个类，自动将Controller返回的数据包装成CommonResult格式
  */
 
-@RestControllerAdvice
+@RestControllerAdvice   //@RestControllerAdvice是@ControllerAdvice与@ResponseBody 的组合注解
 public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 
     /**
@@ -19,7 +25,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
      * @param converterType 转换器类型
      * @return true=需要包装，false=不需要包装
      */
-    @Override
+    @Override   // 重写supports方法表示哪些请求需要被拦截
     public boolean supports(MethodParameter returnType, Class converterType) {
         // 1. 如果已经是 CommonResult 类型，不再包装（避免重复包装）
         if (returnType.getParameterType().isAssignableFrom(CommonResult.class)) {
@@ -53,7 +59,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
      * @param response HTTP 响应
      * @return 包装后的 CommonResult 对象
      */
-    @Override
+    @Override   // 表示返回之前需要执行的逻辑
     public Object beforeBodyWrite(Object body,
                                   MethodParameter returnType,
                                   MediaType selectedContentType,
@@ -74,8 +80,8 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
         // 3. 如果是 String 类型，需要特殊处理
         //    Spring 的 StringHttpMessageConverter 不能直接处理 CommonResult
         if (body instanceof String) {
-            // 把 CommonResult 转成 JSON 字符串返回
-            return com.alibaba.fastjson.JSON.toJSONString(CommonResult.success(body));
+            // Fastjson2 的序列化方式
+            return JSON.toJSONString(CommonResult.success(body));
         }
 
         // 4. 其他情况：包装成成功的 CommonResult
