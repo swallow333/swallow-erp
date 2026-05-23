@@ -34,7 +34,7 @@ public class JwtUtil {
     /**
      * 生成 Token
      */
-    public String generateToken(Long userId, String username) {
+    public String generateToken(Integer userId, String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("username", username);
@@ -54,12 +54,12 @@ public class JwtUtil {
     /**
      * 从 Token 中获取用户ID
      */
-    public Long getUserIdFromToken(String token) {
+    public Integer getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
         if (claims == null) {
             return null;
         }
-        return Long.parseLong(claims.getSubject());
+        return Integer.parseInt(claims.getSubject());
     }
 
     /**
@@ -93,7 +93,7 @@ public class JwtUtil {
      * 刷新 Token
      */
     public String refreshToken(String token) {
-        Long userId = getUserIdFromToken(token);
+        Integer userId = getUserIdFromToken(token);
         String username = getUsernameFromToken(token);
         if (userId == null || username == null) {
             return null;
