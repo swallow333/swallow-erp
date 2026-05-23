@@ -9,15 +9,17 @@ import lombok.Getter;
 
 @Getter
 public enum CommonCodeEnum {
-    // ========== 1xx-9xx: HTTP 状态码 ==========
+    // ========== 101-1000: HTTP 状态码 ==========
     SUCCESS(200, "操作成功"),
+    CREATED(201, "创建成功"),
+    NO_CONTENT(204, "无内容"),
     BAD_REQUEST(400, "请求参数错误"),
     UNAUTHORIZED(401, "未登录或登录已过期"),
     FORBIDDEN(403, "无权限访问"),
     NOT_FOUND(404, "请求资源不存在"),
     METHOD_NOT_ALLOWED(405, "请求方法不支持"),
     SERVER_ERROR(500, "服务器内部错误"),
-    // ========== 1xxx-9xxx: 通用业务 ==========
+    // ========== 1001-10000: 通用业务 ==========
     PARAM_IS_EMPTY(1001, "参数不能为空"),
     PARAM_TYPE_ERROR(1002, "参数类型错误"),
     PARAM_FORMAT_ERROR(1003, "参数格式错误"),
@@ -30,7 +32,7 @@ public enum CommonCodeEnum {
     FILE_DOWNLOAD_ERROR(1202, "文件下载失败"),
     FILE_FORMAT_ERROR(1203, "文件格式错误"),
     FILE_SIZE_EXCEED(1204, "文件大小超限"),
-    // ========== 1xxxx-2xxxx: 用户模块 ==========
+    // ========== 10001-20000: 用户模块 ==========
     USER_NOT_EXIST(10001, "用户不存在"),
     USER_PASSWORD_ERROR(10002, "密码错误"),
     USER_DISABLED(10003, "账号已被禁用"),
@@ -43,7 +45,7 @@ public enum CommonCodeEnum {
     LOGIN_EXPIRED(10010, "登录已过期"),
     OLD_PASSWORD_ERROR(10011, "原密码错误"),
     NEW_PASSWORD_SAME(10012, "新密码不能与旧密码相同"),
-    // ========== 2xxxx-3xxxx: 订单模块 ==========
+    // ========== 20001-30000: 订单模块 ==========
     ORDER_NOT_EXIST(20001, "订单不存在"),
     ORDER_STATUS_ERROR(20002, "订单状态错误"),
     ORDER_CANNOT_CANCEL(20003, "订单无法取消"),
