@@ -59,9 +59,7 @@ public class AuthController {
         LoginResponse response = new LoginResponse(token, user);
         return CommonResult.success("登录成功", response);
     }
-    /**
-     * 登出（JWT 无状态，客户端丢弃 Token 即可）
-     */
+    // 登出（JWT无状态，客户端丢弃Token即可）
     @PostMapping("/logout")
     public CommonResult<Void> logout() {
         // JWT 是无状态的，服务端不需要存储

@@ -26,9 +26,7 @@ public class JwtUtil {
     private String header;
     @Value("${jwt.tokenPrefix:Bearer }")
     private String tokenPrefix;
-    /**
-     * 生成 Token
-     */
+    // 生成Token
     public String generateToken(Integer userId, String username) {
         Map<String, Object> claims = new HashMap<>();   // Claims是JWT的有效载荷(Payload)部分，包含了用于验证和识别令牌持有者的关键信息
         claims.put("userId", userId);
@@ -43,9 +41,7 @@ public class JwtUtil {
                 .signWith(getSecretKey())   //  使用指定密钥对 JWT 进行签名，确保令牌的完整性和真实性
                 .compact(); // 生成最终令牌
     }
-    /**
-     * 从 Token 中获取用户ID
-     */
+    // 从Token中获取用户ID
     public Integer getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
         if (claims == null) {
@@ -53,9 +49,7 @@ public class JwtUtil {
         }
         return Integer.parseInt(claims.getSubject());
     }
-    /**
-     * 从 Token 中获取用户名
-     */
+     // 从Token中获取用户名
     public String getUsernameFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
         if (claims == null) {
@@ -63,9 +57,7 @@ public class JwtUtil {
         }
         return (String) claims.get("username");
     }
-    /**
-     * 验证 Token 是否有效
-     */
+    // 验证Token是否有效
     public Boolean validateToken(String token) {
         try {
             Claims claims = getClaimsFromToken(token);
@@ -78,9 +70,7 @@ public class JwtUtil {
             return false;
         }
     }
-    /**
-     * 刷新 Token
-     */
+    // 刷新Token
     public String refreshToken(String token) {
         Integer userId = getUserIdFromToken(token);
         String username = getUsernameFromToken(token);
@@ -89,9 +79,7 @@ public class JwtUtil {
         }
         return generateToken(userId, username);
     }
-    /**
-     * 获取 Token 中的 Claims
-     */
+    // 获取Token中的Claims
     private Claims getClaimsFromToken(String token) {
         try {
             // 去掉 Bearer 前缀
@@ -111,9 +99,7 @@ public class JwtUtil {
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)); // 签名算法选择
     }
-    /**
-     * 从请求头获取 Token
-     */
+    // 从请求头获取Token
     public String getTokenFromHeader(String authHeader) {
         if (authHeader != null && authHeader.startsWith(tokenPrefix)) {
             return authHeader.substring(tokenPrefix.length());
