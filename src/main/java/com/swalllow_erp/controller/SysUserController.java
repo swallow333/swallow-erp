@@ -19,18 +19,18 @@ import java.util.List;
 @RequestMapping("/users")  // ← 复数
 public class SysUserController {
     @Autowired
-    private SysUserService userService;
+    private SysUserService sysUserService;
     // GET /users - 查询所有
     @GetMapping
     public CommonResult<List<SysUser>> list() {
-        List<SysUser> list = userService.list();
+        List<SysUser> list = sysUserService.list();
         list.forEach(u -> u.setPassword(null));
         return CommonResult.success(list);
     }
     // GET /users/{id} - 查询单个
     @GetMapping("/{id}")
     public CommonResult<SysUser> getById(@PathVariable Long id) {
-        SysUser user = userService.getById(id);
+        SysUser user = sysUserService.getById(id);
         if (user == null) {
             return CommonResult.error(CommonCodeEnum.NOT_FOUND);
         }
@@ -41,21 +41,21 @@ public class SysUserController {
     @PostMapping
     public CommonResult<SysUser> create(@RequestBody SysUser user) {
         // 检查用户名是否存在
-        SysUser existUser = userService.getByUsername(user.getUsername());
+        SysUser existUser = sysUserService.getByUsername(user.getUsername());
         if (existUser != null) {
             return CommonResult.error(CommonCodeEnum.USERNAME_EXIST);
         }
         // 密码加密
         String md5Password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
         user.setPassword(md5Password);
-        userService.save(user);
+        sysUserService.save(user);
         user.setPassword(null);
         return CommonResult.created(user);  // 返回 201
     }
     // PUT /users/{id} - 全量更新
     @PutMapping("/{id}")
     public CommonResult<Void> update(@PathVariable Integer id, @RequestBody SysUser user) {
-        SysUser existUser = userService.getById(id);
+        SysUser existUser = sysUserService.getById(id);
         if (existUser == null) {
             return CommonResult.error(CommonCodeEnum.NOT_FOUND);
         }
@@ -67,18 +67,32 @@ public class SysUserController {
         } else {
             user.setPassword(null);
         }
-        userService.updateById(user);
+        sysUserService.updateById(user);
         return CommonResult.success();
     }
     // DELETE /users/{id} - 删除用户
     @DeleteMapping("/{id}")
     public CommonResult<Void> delete(@PathVariable Long id) {
-        SysUser existUser = userService.getById(id);
+        SysUser existUser = sysUserService.getById(id);
         if (existUser == null) {
             return CommonResult.error(CommonCodeEnum.NOT_FOUND);
         }
-        userService.removeById(id);
+        sysUserService.removeById(id);
 
         return CommonResult.noContent(CommonCodeEnum.NO_CONTENT.getMessage(), null);  // 返回 204
+    }
+
+    /**
+     * 启用/禁用用户
+     */
+    @PutMapping("/{id}/status")
+    public CommonResult<Void> updateStatus(@PathVariable Integer id, @RequestParam Integer status) {
+        SysUser existUser = sysUserService.getById(id);
+        if (existUser == null) {
+            return CommonResult.error(CommonCodeEnum.USER_NOT_EXIST);
+        }
+        existUser.setStatus(status);
+        sysUserService.updateById(existUser);
+        return CommonResult.success(status == 1 ? "启用成功" : "禁用成功", null);
     }
 }
