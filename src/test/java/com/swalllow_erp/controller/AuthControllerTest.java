@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.when;
@@ -180,7 +181,7 @@ public class AuthControllerTest {
         when(jwtUtil.getTokenFromHeader("Bearer " + oldToken)).thenReturn(oldToken);
         when(jwtUtil.validateToken(oldToken)).thenReturn(true);
         when(jwtUtil.refreshToken(oldToken)).thenReturn(newToken);
-        when(jwtUtil.getUserIdFromToken(oldToken)).thenReturn(1);
+        when(jwtUtil.getUserIdFromToken(anyString())).thenReturn(1);
         when(sysUserService.getById(1)).thenReturn(mockUser);
 
         mockMvc.perform(post("/auth/refresh")
