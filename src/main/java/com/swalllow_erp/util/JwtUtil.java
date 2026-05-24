@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * JWT工具类
  * @Author: Swallow333
  * @Date: 2026/05/23 19:35
  */

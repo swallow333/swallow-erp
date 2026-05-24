@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 /**
- * 登录控制器
+ * 验证控制器
  * @Author: Swallow333
  * @Date: 2026/05/22 18:11
  */
@@ -26,6 +26,7 @@ public class AuthController {
     private SysUserService sysUserService;
     @Autowired
     private JwtUtil jwtUtil;
+
     // 登录
     @PostMapping("/login")  // 用来处理客户端发送的POST请求，可以自动将请求体中的数据转换为Java对象，并将返回值转换为JSON或XML格式
     public CommonResult<LoginResponse> login(@RequestBody LoginRequest request) {   // @RequestBody:把前端传来的 JSON 数据自动转换成 Java 对象
@@ -59,6 +60,7 @@ public class AuthController {
         LoginResponse response = new LoginResponse(token, user);
         return CommonResult.success("登录成功", response);
     }
+
     // 登出（JWT无状态，客户端丢弃Token即可）
     @PostMapping("/logout")
     public CommonResult<Void> logout() {
@@ -66,9 +68,8 @@ public class AuthController {
         // 如果需要黑名单，可以存入 Redis
         return CommonResult.success("退出成功", null);
     }
-    /**
-     * 获取当前用户信息（需要 Token）
-     */
+
+    // 获取当前用户信息（需要Token）
     @GetMapping("/me")
     public CommonResult<SysUser> getCurrentUser(HttpServletRequest request) {
         // 从请求头获取 Token
@@ -90,9 +91,8 @@ public class AuthController {
         user.setPassword(null);
         return CommonResult.success(user);
     }
-    /**
-     * 刷新 Token
-     */
+
+    // 刷新 Token
     @PostMapping("/refresh")
     public CommonResult<LoginResponse> refreshToken(HttpServletRequest request) {
         String authHeader = request.getHeader(jwtUtil.getHeader());
