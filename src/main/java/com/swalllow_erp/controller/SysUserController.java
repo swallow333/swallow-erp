@@ -15,13 +15,13 @@ import java.util.List;
  * @Date: 2026/05/23 16:50
  */
 
-@RestController
-@RequestMapping("/users")  // ← 复数
+@RestController // 表明这个类是一个控制器（Controller），并且它的所有方法返回的数据都会直接写入HTTP响应体（Response Body）中，而不是跳转到某个视图页面。
+@RequestMapping("/users")  // 将一个特定请求或者请求模式映射到一个控制器之上，表示类中的所有响应请求的方法都是以该地址作为父路径
 public class SysUserController {
-    @Autowired
+    @Autowired  // 字段注入:Spring自动注入SysUserService，不用手动new，不推荐，破坏封装性，难以进行单元测试
     private SysUserService sysUserService;
     // GET /users - 查询所有
-    @GetMapping
+    @GetMapping // 使用@GetMapping注解映射HTTP GET请求到父路径到CommonResult方法
     public CommonResult<List<SysUser>> list() {
         List<SysUser> list = sysUserService.list();
         list.forEach(u -> u.setPassword(null));

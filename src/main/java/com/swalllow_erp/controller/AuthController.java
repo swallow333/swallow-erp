@@ -19,7 +19,7 @@ import java.util.Map;
  * @Author: Swallow333
  * @Date: 2026/05/22 18:11
  */
-@RestController //  表明这个类是一个控制器（Controller），并且它的所有方法返回的数据都会直接写入HTTP响应体（Response Body）中，而不是跳转到某个视图页面。
+@RestController // 表明这个类是一个控制器（Controller），并且它的所有方法返回的数据都会直接写入HTTP响应体（Response Body）中，而不是跳转到某个视图页面。
 @RequestMapping("/auth")    // 将一个特定请求或者请求模式映射到一个控制器之上，表示类中的所有响应请求的方法都是以该地址作为父路径
 public class AuthController {
     @Autowired // 字段注入:Spring自动注入SysUserService，不用手动new，不推荐，破坏封装性，难以进行单元测试
