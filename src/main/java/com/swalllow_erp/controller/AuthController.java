@@ -94,7 +94,7 @@ public class AuthController {
 
     // 刷新 Token
     @PostMapping("/refresh")
-    public CommonResult<LoginResponse> refreshToken(HttpServletRequest request) {
+    public CommonResult<LoginResponse> refreshToken(HttpServletRequest request) {   // HttpServletRequest对象封装了请求的所有信息，包括请求的方法（如 GET、POST）、请求的 URL、请求头、请求参数等
         String authHeader = request.getHeader(jwtUtil.getHeader());
         String token = jwtUtil.getTokenFromHeader(authHeader);
         if (token == null) {

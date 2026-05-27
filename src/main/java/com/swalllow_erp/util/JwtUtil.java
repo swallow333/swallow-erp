@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
+    // 注入获取对应属性文件中定义的属性值,:表示默认值
     @Value("${jwt.secret:SwallowERPSystemSecretKey2026!@#$%^&*()}")
     private String secret;
     @Value("${jwt.expiration:7200000}")
