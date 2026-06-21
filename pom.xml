@@ -89,6 +89,14 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!--pagehelper-->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>4.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>swallow-erp</finalName>
