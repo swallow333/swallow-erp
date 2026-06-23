@@ -36,28 +36,4 @@ public interface SaleOrderDetailMapper extends BaseMapper<SaleOrderDetail> {
     })
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int batchInsert(@Param("list") List<SaleOrderDetail> details);
-
-    // 新增方法
-    @Select("SELECT p.id AS productId, p.title AS productName, p.sku AS productSku, " +
-            "SUM(d.quantity) AS totalQuantity, SUM(d.amount) AS totalAmount " +
-            "FROM sale_order_detail d " +
-            "JOIN product p ON d.product_id = p.id " +
-            "JOIN sale_order o ON d.order_id = o.id " +
-            "WHERE o.status IN (2, 3) " +
-            "GROUP BY d.product_id " +
-            "ORDER BY totalAmount DESC " +
-            "LIMIT #{limit}")
-    List<DashboardStatistics.ProductRank> selectTopProducts(@Param("limit") Integer limit);
-
-    // SaleOrderDetailMapper.java
-    @Select("SELECT p.id AS productId, p.title AS productName, p.sku AS productSku, " +
-            "SUM(d.quantity) AS totalQuantity, SUM(d.amount) AS totalAmount " +
-            "FROM sale_order_detail d " +
-            "JOIN product p ON d.product_id = p.id " +
-            "JOIN sale_order o ON d.order_id = o.id " +
-            "WHERE o.status IN (2, 3) " +
-            "GROUP BY d.product_id " +
-            "ORDER BY totalAmount DESC " +
-            "LIMIT #{limit}")
-    List<Map<String, Object>> selectTopProducts(@Param("limit") Integer limit);
 }
