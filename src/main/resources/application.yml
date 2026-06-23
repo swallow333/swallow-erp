@@ -5,6 +5,9 @@ spring:
     password: 3333
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  main:
+    allow-bean-definition-overriding: true
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
