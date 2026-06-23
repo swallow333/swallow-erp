@@ -111,6 +111,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!--easyexcel-->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>easyexcel</artifactId>
+      <version>4.0.3</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>swallow-erp</finalName>
