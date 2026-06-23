@@ -1,7 +1,5 @@
 package com.swalllow_erp.service.impl;
 
-package com.swalllow_erp.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -11,6 +9,8 @@ import com.swalllow_erp.entity.PurchaseOrderDetail;
 import com.swalllow_erp.entity.Product;
 import com.swalllow_erp.mapper.PurchaseOrderDetailMapper;
 import com.swalllow_erp.mapper.PurchaseOrderMapper;
+import com.swalllow_erp.service.ProductService;
+import com.swalllow_erp.service.PurchaseOrderDetailService;
 import com.swalllow_erp.service.PurchaseOrderService;
 import com.swalllow_erp.dto.request.PurchaseOrderCreateRequest;
 import com.swalllow_erp.dto.request.PurchaseOrderQueryRequest;
@@ -30,19 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 /**
  * @Author: Swallow333
  * @Date: 2026/06/22 22:18
  */
-
 @Service
 public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, PurchaseOrder>
         implements PurchaseOrderService {
-
     @Autowired
-    private PurchaseOrderDetailMapper detailMapper;
-
+    private PurchaseOrderDetailService detailService;
+    @Autowired
+    private PurchaseOrderDetailMapper  detailMapper;
     @Autowired
     private ProductService productService;
 
@@ -63,10 +61,9 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         order.setSupplierId(request.getSupplierId());
         order.setOrderDate(LocalDateTime.now());
         order.setTotalAmount(totalAmount);
-        order.setStatus(0);  // 草稿
+        order.setStatus(0);
         order.setRemark(request.getRemark());
         order.setCreateBy(userId);
-
         save(order);
 
         // 4. 创建订单明细
@@ -81,7 +78,9 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
             detail.setReceivedQuantity(0);
             details.add(detail);
         }
-        detailMapper.insertBatch(details);
+
+        // ✅ 使用 Service 的 saveBatch() 批量插入
+        detailService.saveBatch(details);
 
         return order;
     }
@@ -89,9 +88,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     @Override
     public PageInfo<PurchaseOrder> queryPage(PurchaseOrderQueryRequest request) {
         PageHelper.startPage(request.getPageNum(), request.getPageSize());
-
         LambdaQueryWrapper<PurchaseOrder> wrapper = new LambdaQueryWrapper<>();
-
         if (StringUtils.hasText(request.getOrderNo())) {
             wrapper.like(PurchaseOrder::getOrderNo, request.getOrderNo());
         }
@@ -101,9 +98,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         if (request.getStatus() != null) {
             wrapper.eq(PurchaseOrder::getStatus, request.getStatus());
         }
-
         wrapper.orderByDesc(PurchaseOrder::getCreateTime);
-
         List<PurchaseOrder> list = list(wrapper);
         return new PageInfo<>(list);
     }
@@ -114,11 +109,9 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         if (order == null) {
             return null;
         }
-
         // 查询明细
         List<PurchaseOrderDetail> details = detailMapper.selectByOrderId(orderId);
         order.setDetails(details);
-
         // TODO: 补充商品名称、供应商名称等关联信息
         return order;
     }
@@ -130,15 +123,12 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         if (order == null) {
             throw new RuntimeException("采购订单不存在");
         }
-
         // 状态流转校验
         Integer currentStatus = order.getStatus();
         Integer targetStatus = request.getStatus();
-
         if (!isValidStatusTransition(currentStatus, targetStatus)) {
             throw new RuntimeException("状态流转不合法");
         }
-
         order.setStatus(targetStatus);
         order.setUpdateBy(userId);
         updateById(order);
@@ -151,12 +141,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         if (order == null) {
             throw new RuntimeException("采购订单不存在");
         }
-
         // 只有草稿和已审核的订单可以取消
         if (order.getStatus() != 0 && order.getStatus() != 1) {
             throw new RuntimeException("当前状态不允许取消");
         }
-
         order.setStatus(3);  // 已取消
         order.setUpdateBy(userId);
         updateById(order);
@@ -171,14 +159,12 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                 .orderByDesc(PurchaseOrder::getOrderNo)
                 .last("LIMIT 1");
         PurchaseOrder lastOrder = getOne(wrapper);
-
         int seq = 1;
         if (lastOrder != null) {
             String lastNo = lastOrder.getOrderNo();
             String seqStr = lastNo.substring(lastNo.length() - 4);
             seq = Integer.parseInt(seqStr) + 1;
         }
-
         return "PO" + date + String.format("%04d", seq);
     }
 

@@ -1,8 +1,9 @@
 package com.swalllow_erp.service;
 
-
-
-import javax.servlet.http.HttpServletResponse;
+import com.swalllow_erp.dto.request.InventoryQueryRequest;
+import com.swalllow_erp.dto.request.PurchaseOrderQueryRequest;
+import com.swalllow_erp.dto.request.SaleOrderQueryRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @Author: Swallow333
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public interface ExcelExportService {
-
     /**
      * 导出采购订单
      */

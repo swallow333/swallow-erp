@@ -98,14 +98,7 @@ public class SupplierController {
             return CommonResult.error(CommonCodeEnum.DATA_NOT_EXIST);
         }
 
-        // 如果修改编码，检查是否重复
-        if (request.getCode() != null && !request.getCode().equals(supplier.getCode())) {
-            if (supplierService.isCodeDuplicate(request.getCode(), id)) {
-                return CommonResult.error(CommonCodeEnum.DATA_DUPLICATE);
-            }
-            supplier.setCode(request.getCode());
-        }
-
+        // ✅ 编码不允许修改，不处理 code
         supplier.setName(request.getName());
         supplier.setContact(request.getContact());
         supplier.setPhone(request.getPhone());

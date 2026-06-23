@@ -1,15 +1,14 @@
 package com.swalllow_erp.dto.request;
 
-
-
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * @Author: Swallow333
  * @Date: 2026/06/22 22:15
  */
-
 @Data
 public class PurchaseOrderUpdateRequest {
     private Integer supplierId;

@@ -1,7 +1,7 @@
 package com.swalllow_erp.mapper;
 
 
-import com.swalllow_erp.dto.response.DashboardStatistics;
+import com.swalllow_erp.dto.DashboardStatistics;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

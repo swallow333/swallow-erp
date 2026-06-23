@@ -3,6 +3,7 @@ package com.swalllow_erp.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.swalllow_erp.entity.SysRole;
 import com.swalllow_erp.entity.SysUserRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

@@ -2,7 +2,7 @@ package com.swalllow_erp.controller;
 
 
 import com.swalllow_erp.common.CommonResult;
-import com.swalllow_erp.dto.response.DashboardStatistics;
+import com.swalllow_erp.dto.DashboardStatistics;
 import com.swalllow_erp.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

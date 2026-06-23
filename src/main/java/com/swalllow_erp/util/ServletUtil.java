@@ -1,20 +1,14 @@
 package com.swalllow_erp.util;
 
-
-
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @Author: Swallow333
- * @Date: 2026/06/24 1:17
+ * @Date: 2026/06/24 1:40
  */
-
-
-public class ServletUtils {
-
+public class ServletUtil {
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
@@ -27,7 +21,6 @@ public class ServletUtils {
         if (request == null) {
             return "unknown";
         }
-
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");

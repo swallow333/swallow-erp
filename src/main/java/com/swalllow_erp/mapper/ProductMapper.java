@@ -16,16 +16,19 @@ import java.util.List;
 @Mapper
 public interface ProductMapper extends BaseMapper<Product> {
 
-    @Select("SELECT * FROM product WHERE asin = #{asin}")
-    List<Product> findByAsin(@Param("asin") String asin);
-
     @Select("SELECT * FROM product WHERE sku = #{sku}")
     Product findBySku(@Param("sku") String sku);
 
-    @Update("UPDATE product SET stock = stock + #{quantity} WHERE id = #{productId}")
-    int increaseStock(@Param("productId") Integer productId, @Param("quantity") Integer quantity);
+    @Select("SELECT * FROM product WHERE asin = #{asin}")
+    List<Product> findByAsin(@Param("asin") String asin);
 
-    // 新增方法
-    @Select("SELECT COUNT(*) FROM product WHERE status = #{status}")
+    /**
+     * 根据关键词搜索商品（SKU或名称）
+     */
+    @Select("SELECT * FROM product WHERE sku LIKE CONCAT('%', #{keyword}, '%') " +
+            "OR title LIKE CONCAT('%', #{keyword}, '%')")
+    List<Product> selectByKeyword(@Param("keyword") String keyword);
+
+    @Select("SELECT COUNT(*) FROM product WHERE status = 1")
     Integer countByStatus(@Param("status") Integer status);
 }

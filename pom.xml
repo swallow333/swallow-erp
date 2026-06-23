@@ -37,6 +37,13 @@
       <version>4.0.5</version>
       <scope>compile</scope>
     </dependency>
+    <!--spring-boot-starter-aop-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <version>3.5.15</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!--mysql-->
     <dependency>
