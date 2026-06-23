@@ -5,6 +5,7 @@ import com.swalllow_erp.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     @Select("SELECT * FROM product WHERE sku = #{sku}")
     Product findBySku(@Param("sku") String sku);
+
+    @Update("UPDATE product SET stock = stock + #{quantity} WHERE id = #{productId}")
+    int increaseStock(@Param("productId") Integer productId, @Param("quantity") Integer quantity);
 }
