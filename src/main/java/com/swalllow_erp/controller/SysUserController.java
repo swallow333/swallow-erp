@@ -1,7 +1,9 @@
 package com.swalllow_erp.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.swalllow_erp.common.CommonCodeEnum;
 import com.swalllow_erp.common.CommonResult;
+import com.swalllow_erp.dto.request.UserQueryRequest;
 import com.swalllow_erp.entity.SysUser;
 import com.swalllow_erp.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,5 +96,11 @@ public class SysUserController {
         existUser.setStatus(status);
         sysUserService.updateById(existUser);
         return CommonResult.success(status == 1 ? "启用成功" : "禁用成功", null);
+    }
+
+    @PostMapping("/page")
+    public CommonResult<PageInfo<SysUser>> queryPage(@RequestBody UserQueryRequest request) {
+        PageInfo<SysUser> page = sysUserService.queryPage(request);
+        return CommonResult.success(page);
     }
 }

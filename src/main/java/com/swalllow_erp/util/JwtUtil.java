@@ -1,24 +1,18 @@
 package com.swalllow_erp.util;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTUtil;
-import cn.hutool.jwt.JWTValidator;
-import cn.hutool.jwt.signers.JWTSigner;
-import cn.hutool.jwt.signers.JWTSignerUtil;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
+
+import lombok.Getter;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.JWTValidator;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+
 
 /**
  * JWT 工具类
@@ -33,13 +27,11 @@ public class JwtUtil {
     private String secret;
     @Value("${jwt.expiration:7200000}")
     private Long expiration;  // 2小时 = 7200000 毫秒
-    // ========== Getter ==========
     @Getter
     @Value("${jwt.header:Authorization}")
     private String header;
     @Value("${jwt.tokenPrefix}")
     private String tokenPrefix;
-
 
     // 生成 Token
     public String generateToken(Integer userId, String username) {
@@ -54,31 +46,17 @@ public class JwtUtil {
         return JWTUtil.createToken(claims, secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // // 验证 Token 是否有效
-    // public Boolean validateToken(String token) {
-    //     try {
-    //
-    //         // 解析 Token ，得到 jwt 对象，jwt 包含头部、载荷、签名
-    //         // JWT jwt = JWTUtil.parseToken(token);
-    //         // 验证签名和过期时间
-    //         // verify() 检查签名，validate(0) 检查过期（0 表示不允许时间偏差）
-    //         // boolean verified = jwt.setKey(secret.getBytes(StandardCharsets.UTF_8)).verify();
-    //         return JWTUtil.verify(token, secret.getBytes(StandardCharsets.UTF_8));
-    //         //
-    //         // if (!verified) {
-    //         //     return false;
-    //         // }
-    //         // 检查过期时间
-    //         // return jwt.validate(0);
-    //         // return JWTValidator.of(token).validateDate();
-    //     } catch (Exception e) {
-    //         return false;
-    //     }
-    // }
-
     // 验证 Token 是否有效
     public Boolean validateToken(String token) {
-        return JWTUtil.verify(token, secret.getBytes(StandardCharsets.UTF_8));
+        try {
+            if (!JWTUtil.verify(token, secret.getBytes(StandardCharsets.UTF_8))) {
+                return false;
+            }
+            JWTValidator.of(token).validateDate(new Date());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // 从Token中获取用户ID
@@ -127,8 +105,6 @@ public class JwtUtil {
         }
         return generateToken(userId, username);
     }
-
-
 
     // 从请求头获取 Token
     public String getTokenFromHeader(String authHeader) {
