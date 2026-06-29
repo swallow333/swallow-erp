@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.swalllow_erp.entity.Inventory;
 import com.swalllow_erp.entity.SaleOrder;
 import com.swalllow_erp.entity.SaleOrderDetail;
+import com.swalllow_erp.exception.BusinessException;
 import com.swalllow_erp.mapper.SaleOrderDetailMapper;
 import com.swalllow_erp.mapper.SaleOrderMapper;
 import com.swalllow_erp.service.InventoryService;
@@ -44,7 +45,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
         for (SaleOrderCreateRequest.OrderDetail dto : request.getDetails()) {
             Inventory inventory = inventoryService.getByProductId(dto.getProductId());
             if (inventory == null || inventory.getAvailableQuantity() < dto.getQuantity()) {
-                throw new RuntimeException("商品库存不足，请调整数量");
+                throw new BusinessException("库存不足，请调整数量");
             }
         }
         // 2. 生成订单编号
