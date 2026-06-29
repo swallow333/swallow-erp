@@ -1,6 +1,7 @@
 package com.swalllow_erp.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,6 +26,8 @@ public class PurchaseOrder {
     private LocalDateTime updateTime;
 
     // 非数据库字段（关联查询用）
+    @TableField(exist = false)  // 表明该字段在数据库中不存在
     private String supplierName;
+    @TableField(exist = false)  // TODO：数据库设计不合理，修改数据库
     private List<PurchaseOrderDetail> details;
 }
