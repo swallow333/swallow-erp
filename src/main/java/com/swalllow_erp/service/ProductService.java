@@ -1,6 +1,8 @@
 package com.swalllow_erp.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
+import com.swalllow_erp.dto.request.ProductQueryRequest;
 import com.swalllow_erp.entity.Product;
 
 import java.util.List;
@@ -12,4 +14,5 @@ import java.util.List;
 public interface ProductService extends IService<Product> {
     Product findBySku(String sku);
     List<Product> findByAsin(String asin);
+    PageInfo<Product> queryPage(ProductQueryRequest request);
 }

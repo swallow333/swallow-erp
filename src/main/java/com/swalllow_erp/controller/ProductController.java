@@ -1,9 +1,11 @@
 package com.swalllow_erp.controller;
 
 import com.alibaba.fastjson2.JSON;
+import com.github.pagehelper.PageInfo;
 import com.swalllow_erp.common.CommonCodeEnum;
 import com.swalllow_erp.common.CommonResult;
 import com.swalllow_erp.dto.request.ProductCreateRequest;
+import com.swalllow_erp.dto.request.ProductQueryRequest;
 import com.swalllow_erp.dto.request.ProductUpdateRequest;
 import com.swalllow_erp.entity.Product;
 import com.swalllow_erp.entity.ProductListing;
@@ -137,5 +139,11 @@ public class ProductController {
             productListingService.removeById(listing.getId());
         }
         return CommonResult.success("删除成功", null);
+    }
+
+    @PostMapping("/page")
+    public CommonResult<PageInfo<Product>> queryPage(@RequestBody ProductQueryRequest request) {
+        PageInfo<Product> page = productService.queryPage(request);
+        return CommonResult.success(page);
     }
 }
