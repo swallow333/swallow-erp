@@ -22,4 +22,6 @@ public class ProductCreateRequest {
     private List<String> bulletPoints;    // 五点描述列表
     private String description;            // 详细描述
     private String searchTerms;            // 搜索关键词
+    private String variationTheme;
+    private String parentAsin;
 }

@@ -89,9 +89,12 @@ public class ProductController {
         if (request.getBulletPoints() != null) {
             listing.setBulletPoints(JSON.toJSONString(request.getBulletPoints()));
         }
-        listing.setDescription(request.getDescription());
-        listing.setSearchTerms(request.getSearchTerms());
-
+        // ✅ 设置字段（即使为空也传）
+        listing.setBulletPoints(request.getBulletPoints() != null ? JSON.toJSONString(request.getBulletPoints()) : "[]");
+        listing.setDescription(request.getDescription() != null ? request.getDescription() : "");
+        listing.setSearchTerms(request.getSearchTerms() != null ? request.getSearchTerms() : "");
+        listing.setVariationTheme(request.getVariationTheme() != null ? request.getVariationTheme() : "");
+        listing.setParentAsin(request.getParentAsin() != null ? request.getParentAsin() : "");
         productListingService.save(listing);
 
         return CommonResult.success("创建成功", null);
