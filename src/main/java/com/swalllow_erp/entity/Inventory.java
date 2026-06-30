@@ -1,5 +1,6 @@
 package com.swalllow_erp.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,10 @@ public class Inventory {
     private Integer lockedQuantity;
     private Integer availableQuantity;
     private LocalDateTime updateTime;
+
     // 非数据库字段
+    @TableField(exist = false)  // TODO：数据库字段设置不合理
     private String productName;
+    @TableField(exist = false)
     private String productSku;
 }

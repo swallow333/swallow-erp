@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.swalllow_erp.entity.*;
+import com.swalllow_erp.exception.BusinessException;
 import com.swalllow_erp.mapper.*;
 import com.swalllow_erp.service.StockInService;
 import com.swalllow_erp.dto.request.StockInCreateRequest;
@@ -98,6 +99,21 @@ public class StockInServiceImpl extends ServiceImpl<StockInMapper, StockIn>
             detail.setAmount(dto.getPrice().multiply(new BigDecimal(dto.getQuantity())));
             stockInDetailMapper.insert(detail);
 
+            // ✅ 5.1.1 更新采购订单明细的已入库数量
+            // 首先根据订单 ID 和商品 ID 查询对应的订单明细
+            List<PurchaseOrderDetail> orderDetails = purchaseOrderDetailMapper
+                    .selectByOrderAndProduct(request.getPurchaseOrderId(), dto.getProductId());
+            if (orderDetails.isEmpty()) {
+                throw new BusinessException("采购订单中未找到该商品明细");
+            }
+            PurchaseOrderDetail orderDetail = orderDetails.get(0);
+            // 累加已入库数量
+            int newReceived = orderDetail.getReceivedQuantity() + dto.getQuantity();
+            if (newReceived > orderDetail.getQuantity()) {
+                throw new BusinessException("入库数量超过采购数量，请检查");
+            }
+            purchaseOrderDetailMapper.increaseReceivedQuantity(orderDetail.getId(), dto.getQuantity());
+
             // 5.2 更新库存
             Inventory inventory = inventoryMapper.selectByProductId(dto.getProductId());
             if (inventory == null) {
@@ -135,7 +151,6 @@ public class StockInServiceImpl extends ServiceImpl<StockInMapper, StockIn>
         purchaseOrderMapper.updateById(order);
 
         // 7. 更新采购订单明细的已入库数量
-        // TODO: 更新 purchase_order_detail 的 received_quantity
 
         return stockIn;
     }
